@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import {  getWeatherByLatLong } from './Fonction/getCity';
 import './App.css';
+import Header from './Components/Header/header';
+import Main from './Components/Main/main';
+const keyApi = "6df5f6b70ef5c4e862fe5907f1e19121"
+
+
 
 function App() {
+  const [lat, setLat] = useState()
+  const [long, setLong] = useState()
+
+  const geoloc = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(position => {
+        setLong(position.coords.longitude);
+        setLat(position.coords.latitude);
+      }, () => {
+        alert('Veuillez accepter la géolocalisation')
+      })
+    }
+  }
+  
+  useEffect(()=>{
+    geoloc()
+    getWeatherByLatLong(lat,long,keyApi)
+  },[lat,long])  
+  
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <Main />
     </div>
   );
 }
